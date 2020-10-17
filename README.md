@@ -1,6 +1,10 @@
 # mids-w251-fa2020-hw9
 UC-Berkeley MIDS W251 HW9
 
+This repo has my work for HW9. I used bash scripts to setup the instances in as repeatable a way as I could. The scripts assume that you've started up the instances (`aws ec2 run-instances ...`) and then piped the instance json description to a file called `instances.json` (by running something like `aws ec2 describe-instances > instances.json`). The scripts will use `jq` to parse the json, and pull out public DNS names and private IP addresses for the commands they execute later. `setup-all.sh` will run `setup-instance.sh` on each instance, one at a time. That sets up the fstab to mount the efs storage, builds the docker image, modifies docker to allow the nvidia runtime, and launches the openseq2seq container on each instance.
+
+Once all that is done, you should be able to download the data on one instance. `ssh-host.sh` makes it easier to ssh into a given instance just referencing it by index (i.e. `./ssh-host.sh 1` will ssh into the second (zero-based) instance). After that, ideally the `start-training.sh` script should launch the training (it ssh'es into one of the hosts and tries to docker run the training cmd)...it doesn't work quite right at the moment, so I had to do that manually.
+
 ```
 jtrobec@jtrobec-xavier-01:~/workspace/mids-w251-fa2020-hw9$ aws ec2 describe-vpcs | grep VpcId
             "VpcId": "vpc-0a309d61",
