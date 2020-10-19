@@ -5,6 +5,58 @@ This repo has my work for HW9. I used bash scripts to setup the instances in as 
 
 Once all that is done, you should be able to download the data on one instance. `ssh-host.sh` makes it easier to ssh into a given instance just referencing it by index (i.e. `./ssh-host.sh 1` will ssh into the second (zero-based) instance). After that, ideally the `start-training.sh` script should launch the training (it ssh'es into one of the hosts and tries to docker run the training cmd)...it doesn't work quite right at the moment, so I had to do that manually.
 
+### Questions
+
+* How long does it take to complete the training run? (hint: this session is on distributed training, so it will take a while)
+
+  It took roughly 36hrs to train 100k steps.
+
+* Do you think your model is fully trained? How can you tell?
+
+I can see that in the examples with the 300k step training that BLUE score and eval loss continue improving significantly after the 100k step mark, so it seems like I could continue training and improve the model. However, we have made it past the initial big improvements, and improvements after 100k are slowing down.
+
+* Were you overfitting?
+
+The training loss after 100k steps was ~1.67 and eval loss was ~1.6, so I don't think the model was overfitting particularly badly.
+
+* Were your GPUs fully utilized?
+
+Yes, I used `nvidia-smi` to check GPU utilization throughout the process, and they were 100% utilized.
+
+* Did you monitor network traffic (hint: apt install nmon ) ? Was network the bottleneck?
+
+I used the AWS console network graphs, and see that we maxed out at about 17GB on each instance.
+
+* Take a look at the plot of the learning rate and then check the config file. Can you explan this setting?
+
+
+
+* How big was your training set (mb)? How many training lines did it contain?
+
+There were two files (source and target) involved in training:
+
+```
+-rw-r--r-- 1 root root 976M Oct 15 17:59 train.clean.de.shuffled.BPE_common.32K.tok
+-rw-r--r-- 1 root root 915M Oct 15 17:59 train.clean.en.shuffled.BPE_common.32K.tok
+```
+
+For a total of approximately 1.89GB. Each file has 4524868 lines.
+
+* What are the files that a TF checkpoint is comprised of?
+
+A `.index` file, a `.meta` file and a `.data` file.
+
+* How big is your resulting model checkpoint (mb)?
+
+It's a little over 700MB total, with the data file being ~690MB.
+
+* Remember the definition of a "step". How long did an average step take?
+
+We generally did about 0.78 steps/sec, so each step took approximately 1.28 seconds.
+
+* How does that correlate with the observed network utilization between nodes?
+
+
 ```
 jtrobec@jtrobec-xavier-01:~/workspace/mids-w251-fa2020-hw9$ aws ec2 describe-vpcs | grep VpcId
             "VpcId": "vpc-0a309d61",
