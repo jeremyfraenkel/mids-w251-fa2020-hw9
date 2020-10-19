@@ -25,11 +25,27 @@ Yes, I used `nvidia-smi` to check GPU utilization throughout the process, and th
 
 * Did you monitor network traffic (hint: apt install nmon ) ? Was network the bottleneck?
 
-I used the AWS console network graphs, and see that we maxed out at about 17GB on each instance.
+I used the AWS console network graphs, and see that we maxed out at about 17GB on each instance, both in and out.
 
 * Take a look at the plot of the learning rate and then check the config file. Can you explan this setting?
 
+The config looks like this:
 
+```
+ "lr_policy": transformer_policy,
+  "lr_policy_params": {
+    "learning_rate": 2.0,
+    "warmup_steps": 8000,
+    "d_model": d_model,
+  },
+```
+The initial increase is the `warmup` that's referenced here, and then it decays exponentially after that. The code for openseq2seq says that the strategy came from this paper (https://arxiv.org/pdf/1706.03762.pdf), where they explain:
+
+>5.3    OptimizerWe used the Adam optimizer [20] with β1= 0.9, β2= 0.98 and= 10−9. We varied the learningrate over the course of training, according to the formula:
+>
+>       lrate=d^(−0.5)·min(step_num^(−0.5),step_num·warmup_steps^(−1.5))                                                (3)
+>
+>This corresponds to increasing the learning rate linearly for the first `warmup_steps` training steps, and decreasing it thereafter proportionally to the inverse square root of the step number. We used `warmup_steps= 4000`
 
 * How big was your training set (mb)? How many training lines did it contain?
 
@@ -55,6 +71,7 @@ It's a little over 700MB total, with the data file being ~690MB.
 We generally did about 0.78 steps/sec, so each step took approximately 1.28 seconds.
 
 * How does that correlate with the observed network utilization between nodes?
+
 
 
 ```
