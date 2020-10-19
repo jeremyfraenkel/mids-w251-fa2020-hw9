@@ -25,7 +25,7 @@ Yes, I used `nvidia-smi` to check GPU utilization throughout the process, and th
 
 * Did you monitor network traffic (hint: apt install nmon ) ? Was network the bottleneck?
 
-I used the AWS console network graphs, and see that we maxed out at about 17GB on each instance, both in and out.
+I used the AWS console network graphs, and see that we maxed out at about 17.3GB/5min on each instance, both in and out.
 
 * Take a look at the plot of the learning rate and then check the config file. Can you explan this setting?
 
@@ -72,7 +72,11 @@ We generally did about 0.78 steps/sec, so each step took approximately 1.28 seco
 
 * How does that correlate with the observed network utilization between nodes?
 
+It's not super obvious to me what the correlation is...the AWS network monitoring suggests each node is writing about approximately as fast as it's reading it, roughly 17.3GB per 5 minute period. That's roughly 58M/B per second, which would mean we brought 74MB over per node per step, and wrote out a similar amount. I do not know how that number relates to any of the data files though.
 
+_________________
+
+### Below are notes I took when setting up my instances. Totally ignorable...
 
 ```
 jtrobec@jtrobec-xavier-01:~/workspace/mids-w251-fa2020-hw9$ aws ec2 describe-vpcs | grep VpcId
