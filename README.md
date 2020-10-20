@@ -8,27 +8,21 @@ Once all that is done, you should be able to download the data on one instance. 
 ### Questions
 
 * How long does it take to complete the training run? (hint: this session is on distributed training, so it will take a while)
-
-  It took roughly 36hrs to train 100k steps.
+> It took roughly 36hrs to train 100k steps.
 
 * Do you think your model is fully trained? How can you tell?
-
-I can see that in the examples with the 300k step training that BLUE score and eval loss continue improving significantly after the 100k step mark, so it seems like I could continue training and improve the model. However, we have made it past the initial big improvements, and improvements after 100k are slowing down.
+> I can see that in the examples with the 300k step training that BLUE score and eval loss continue improving significantly after the 100k step mark, so it seems like I could continue training and improve the model. However, we have made it past the initial big improvements, and improvements after 100k are slowing down.
 
 * Were you overfitting?
-
-The training loss after 100k steps was ~1.67 and eval loss was ~1.6, so I don't think the model was overfitting particularly badly.
+> The training loss after 100k steps was ~1.67 and eval loss was ~1.6, so I don't think the model was overfitting particularly badly.
 
 * Were your GPUs fully utilized?
-
-Yes, I used `nvidia-smi` to check GPU utilization throughout the process, and they were 100% utilized.
+> Yes, I used `nvidia-smi` to check GPU utilization throughout the process, and they were 100% utilized.
 
 * Did you monitor network traffic (hint: apt install nmon ) ? Was network the bottleneck?
-
-I used the AWS console network graphs, and see that we maxed out at about 17.3GB/5min on each instance, both in and out.
+> I used the AWS console network graphs, and see that we maxed out at about 17.3GB/5min on each instance, both in and out.
 
 * Take a look at the plot of the learning rate and then check the config file. Can you explan this setting?
-
 The config looks like this:
 
 ```
